@@ -1,6 +1,6 @@
 const targetUrl = 'https://www.usvisascheduling.com/en-US/appointment-confirmation/';
 const targetDomain = 'usvisascheduling.com';
-const CHECK_DELAY = 3000; // 3 seconds
+const CHECK_DELAY = 1500; // 3 seconds
 
 let extensionActive = false; // Flag to control the extension's activity
 let checkTimeout = null; // Variable to store the timeout ID
@@ -107,7 +107,13 @@ function checkTabStatus(tabId) {
 
     // Check if the title contains the word "Appointment"
     if (tab.title.includes("Appointment")) {
-      log("Appointment page detected. Stopping further checks and deactivating extension.");
+      log("Appointment page detected. Switching to the tab and stopping further checks.");
+      
+      // Switch to the tab
+      chrome.tabs.update(tabId, { active: true }, () => {
+        log("Switched to the tab.");
+      });
+      
       extensionActive = false; // Deactivate the extension
       cleanup(); // Clean up listeners and timeouts
       return; // Exit the function
@@ -129,6 +135,7 @@ function checkTabStatus(tabId) {
     }
   });
 }
+
 
 
 function clearDataAndOpenNewTab(oldTabId) {
