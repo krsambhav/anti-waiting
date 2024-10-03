@@ -105,13 +105,17 @@ function checkTabStatus(tabId) {
       return;
     }
 
-    log(`Checking tab status. Current title: "${tab.title}", Status: ${tab.status}`);
-
-    if (tab.title === 'Appointment Confirmation  · Customer Self-Service') {
-      log("Desired page title detected. Stopping further checks.");
+    // Check if the title contains the word "Appointment"
+    if (tab.title.includes("Appointment")) {
+      log("Appointment page detected. Stopping further checks and deactivating extension.");
       extensionActive = false; // Deactivate the extension
       cleanup(); // Clean up listeners and timeouts
-    } else if (tab.status === 'loading' || tab.title === 'Home' || tab.title !== 'Appointment Confirmation  · Customer Self-Service') {
+      return; // Exit the function
+    }
+
+    log(`Checking tab status. Current title: "${tab.title}", Status: ${tab.status}`);
+
+    if (tab.status === 'loading' || tab.title === 'Home') {
       if (isFirstLoad) {
         log("First load did not succeed. Will clear data and retry.");
         isFirstLoad = false; // Set first load flag to false
@@ -125,6 +129,7 @@ function checkTabStatus(tabId) {
     }
   });
 }
+
 
 function clearDataAndOpenNewTab(oldTabId) {
   if (!extensionActive) return; // Stop if the extension is inactive
