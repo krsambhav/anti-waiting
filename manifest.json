@@ -1,17 +1,20 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Anti Waiting",
   "version": "1.2",
   "permissions": [
     "tabs",
     "browsingData",
+    "scripting",
+    "activeTab"
+  ],
+  "host_permissions": [
     "https://www.usvisascheduling.com/*"
   ],
   "background": {
-    "scripts": ["background.js"],
-    "persistent": false
+    "service_worker": "background.js"
   },
-  "browser_action": {
+  "action": {
     "default_title": "Anti Waiting"
   },
   "content_scripts": [
